@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Platform } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Platform, StatusBar, useColorScheme } from "react-native";
 import Task from "./components/Task";
 
 export default function HomeScreen() {
-
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
+
+  // Usa o hook `useColorScheme` para detectar o tema do sistema
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
+
+  // Oculta a StatusBar e ajusta o estilo conforme o tema
+  StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
+  StatusBar.setBackgroundColor(isDarkMode ? "#000" : "#fff");
 
   const handleAddTask = () => {
     Keyboard.dismiss();
@@ -17,29 +24,25 @@ export default function HomeScreen() {
 
   const completeTask = (index) => {
     let itemsCopy = [...taskItems];
-    itemsCopy[index].completed = !itemsCopy[index].completed; // Alterna o estado "concluído"
+    itemsCopy[index].completed = !itemsCopy[index].completed;
     setTaskItems(itemsCopy);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isDarkMode ? styles.darkContainer : styles.lightContainer]}>
       {/* Today's tasks */}
       <View style={styles.tasksWrapper}>
-      <Text style={styles.sectionTitle}>Meu dia</Text>
-      <Text style={styles.sectionTime}>quinta-feira, 7 de novembro</Text>
+        <Text style={[styles.sectionTitle, { color: isDarkMode ? '#fff' : '#000' }]}>Meu dia</Text>
+        <Text style={[styles.sectionTime, { color: isDarkMode ? '#fff' : '#000' }]}>
+          {new Date().toLocaleDateString("pt-PT", { weekday: 'long', day: 'numeric', month: 'long' })}
+        </Text>
 
         <View style={styles.items}>
-          {/* This is where the tasks will go! */}
-          {
-            taskItems.map((item, index) => (
-              <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                <Task 
-                  text={item.text} 
-                  completed={item.completed} // Passa o estado "concluído" como uma prop
-                />
-              </TouchableOpacity>
-            ))
-          }
+          {taskItems.map((item, index) => (
+            <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+              <Task text={item.text} completed={item.completed} />
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
 
@@ -49,8 +52,9 @@ export default function HomeScreen() {
         style={styles.writeTaskWrapper}
       >
         <TextInput 
-          style={styles.input} 
+          style={[styles.input, { backgroundColor: isDarkMode ? "#333" : "#fff", color: isDarkMode ? "#fff" : "#000" }]}
           placeholder={'Adicionar uma tarefa'} 
+          placeholderTextColor={isDarkMode ? "#aaa" : "#666"}
           value={task} 
           onChangeText={text => setTask(text)} 
         />
@@ -64,11 +68,15 @@ export default function HomeScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  darkContainer: {
     backgroundColor: "#262424",
+  },
+  lightContainer: {
+    backgroundColor: "#f9f9f9",
   },
   tasksWrapper: {
     paddingTop: 80,
@@ -76,13 +84,11 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 35,
-    color: '#fff',
     paddingTop: 5,
     fontWeight: "bold",
   },
   sectionTime: {
     fontSize: 18,
-    color: '#fff',
   },
   items: {
     marginTop: 30,
@@ -98,8 +104,6 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: 15,
     paddingHorizontal: 25,
-    // backgroundColor: '#fff',
-    color: '#fff',
     borderRadius: 60,
     borderColor: '#C0C0C0',
     borderWidth: 1,
@@ -121,49 +125,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//   },
-//   tasksWrapper: {
-//     paddingTop: 80,
-//     paddingHorizontal: 20,
-//   },
-//   sectionTitle: {
-//     fontSize: 24,
-//     fontWeight: "bold",
-//   },
-//   items: {
-//     marginTop: 30,
-//   },
-//   writeTaskWrapper: {
-//     position: 'absolute',
-//     bottom: 60,
-//     width: '100%',
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//     alignItems: 'center',
-//   },
-//   input: {
-//     paddingVertical: 15,
-//     paddingHorizontal: 15,
-//     backgroundColor: '#fff',
-//     borderRadius: 60,
-//     borderColor: '#C0C0C0',
-//     borderWidth: 1,
-//     width: 250,
-//   },
-//   addWrapper: {
-//     width: 60,
-//     height: 60,
-//     backgroundColor: '#FFF',
-//     borderRadius: 60,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     borderColor: '#C0C0C0',
-//     borderWidth: 1,
-//   },
-//   addText: {},
-// });
