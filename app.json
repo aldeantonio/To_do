@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Caflow",
-    "slug": "Caflow",
+    "name": "To_do",
+    "slug": "To_do",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -25,7 +25,28 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "manifest": {
+        "short_name": "ToDo",
+        "name": "To_do - Task Manager",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#ffffff",
+        "theme_color": "#ffffff",
+        "description": "Organize suas tarefas com facilidade",
+        "icons": [
+          {
+            "src": "./assets/images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+          },
+          {
+            "src": "./assets/images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          }
+        ]
+      }
     },
     "plugins": [
       "expo-router"

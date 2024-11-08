@@ -28,6 +28,13 @@ export default function HomeScreen() {
     setTaskItems(itemsCopy);
   };
 
+  // Função para remover uma tarefa
+  const removeTask = (index) => {
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);
+    setTaskItems(itemsCopy);
+  };
+
   return (
     <View style={[styles.container, isDarkMode ? styles.darkContainer : styles.lightContainer]}>
       {/* Today's tasks */}
@@ -39,7 +46,11 @@ export default function HomeScreen() {
 
         <View style={styles.items}>
           {taskItems.map((item, index) => (
-            <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+            <TouchableOpacity 
+              key={index} 
+              onPress={() => completeTask(index)}
+              onLongPress={() => removeTask(index)} // Remover tarefa ao pressionar por um longo tempo
+            >
               <Task text={item.text} completed={item.completed} />
             </TouchableOpacity>
           ))}
